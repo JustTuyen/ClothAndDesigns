@@ -1,0 +1,26 @@
+FE:
+
+Axios
+Tailwind
+Tailwind Mui
+React-router
+toastify 
+
+
+BE:
+.Net 10
+
+framewordCore 10.0.12
+>relationship
+>design
+>tools
+>jwt bearer
+
+Ngspq postgresql
+
+AWSSDK.Core
+>AWSSDK.S3
+
+SixLabors
+swagger 10.2.3
+swagger UI 10.2.3
