@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Models.productions.attributes
 {
     [Table("Attributes")]
+    [Index(nameof(Name), IsUnique = true)]
+
     public class AttributeModel
     {
         [Key]

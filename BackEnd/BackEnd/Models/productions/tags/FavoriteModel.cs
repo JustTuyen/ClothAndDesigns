@@ -1,4 +1,5 @@
 ﻿using BackEnd.Models.users;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -6,13 +7,14 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.productions.tags
 {
     [Table("Favorites")]
+    [Index(nameof(ProductId), nameof(UserId))]
+
     public class FavoriteModel
     {
         [Key]
         public int Id { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         // Foreign key
         [Required]
         public int ProductId { get; set; }

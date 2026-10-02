@@ -2,12 +2,14 @@
 using BackEnd.Models.productions.attributes;
 using BackEnd.Models.shopping;
 using BackEnd.Models.users;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Models.others
 {
     [Table("Status")]
+    [Index(nameof(Type), nameof(CreatedAt))]
     public class StatusModel
     {
         [Key]
@@ -26,7 +28,7 @@ namespace BackEnd.Models.others
         public virtual ICollection<OrderModel> Orders { get; set; } = new List<OrderModel>();
         public virtual ICollection<ProductModel> Products { get; set; } = new List<ProductModel>();
         public virtual ICollection<CategoryModel> Categories { get; set; } = new List<CategoryModel>();
-        public virtual ICollection<SubCategoriesMdel> SubCategories { get; set; } = new List<SubCategoriesMdel>();
+        public virtual ICollection<SubCategoriesModel> SubCategories { get; set; } = new List<SubCategoriesModel>();
         public virtual ICollection<BannerModel> Banners { get; set; } = new List<BannerModel>();
         public virtual ICollection<DiscountModel> Discounts { get; set; } = new List<DiscountModel>();
         public virtual ICollection<UserModel> Users { get; set; } = new List<UserModel>();

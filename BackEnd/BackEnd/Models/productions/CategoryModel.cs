@@ -1,4 +1,5 @@
 ﻿using BackEnd.Models.others;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -6,6 +7,8 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.productions
 {
     [Table("Categories")]
+    [Index(nameof(StatusId), nameof(CreatedAt))]
+    [Index(nameof(Name), IsUnique =true)]
     public class CategoryModel
     {
         [Key]
@@ -29,6 +32,6 @@ namespace BackEnd.Models.productions
         [JsonIgnore]
         public virtual StatusModel? Status { get; set; }
 
-        public virtual ICollection<SubCategoriesMdel> SubCategories { get; set; } = new List<SubCategoriesMdel>();
+        public virtual ICollection<SubCategoriesModel> SubCategories { get; set; } = new List<SubCategoriesModel>();
     }
 }

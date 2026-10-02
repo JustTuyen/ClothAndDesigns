@@ -1,12 +1,16 @@
 ﻿using BackEnd.Models.others;
 using BackEnd.Models.users;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace BackEnd.Models.productions
 {
     [Table("Comments")]
+    [Index(nameof(ProductId), nameof(StatusId))]
+    [Index(nameof(ProductId), nameof(UserId), IsUnique = true)]
     public class CommentModel
     {
         [Key]
@@ -14,6 +18,7 @@ namespace BackEnd.Models.productions
         [Required, MaxLength(1000)]
         public string Content { get; set; }
         [Required]
+        [Range(0,5)]
         public int Rate { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -40,6 +45,6 @@ namespace BackEnd.Models.productions
         public int? ImageId { get; set; }
         [ForeignKey(nameof(ImageId))]
         [JsonIgnore]
-        public virtual ImageGallaryModel? Image { get; set; }
+        public virtual ImageModel? Image { get; set; }
     }
 }

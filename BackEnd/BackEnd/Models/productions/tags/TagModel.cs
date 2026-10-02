@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Models.productions.tags
 {
     [Table("Tags")]
+    [Index(nameof(Name), IsUnique = true)]
     public class TagModel
     {
         [Key]

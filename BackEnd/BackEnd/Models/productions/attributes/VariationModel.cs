@@ -1,4 +1,7 @@
-﻿using BackEnd.Models.others;
+﻿using Amazon.Runtime.Telemetry;
+using BackEnd.Models.others;
+using BackEnd.Models.shopping;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -6,6 +9,8 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.productions.attributes
 {
     [Table("Variations")]
+    [Index(nameof(ProductId), nameof(StatusId))]
+
     public class VariationModel
     {
         [Key]
@@ -16,7 +21,7 @@ namespace BackEnd.Models.productions.attributes
         public string Sku { get; set; }
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal AddPrice { get; set; }
+        public decimal AddPrice { get; set; } = 0;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
@@ -36,5 +41,9 @@ namespace BackEnd.Models.productions.attributes
 
         public virtual ICollection<VariationValueModel> VariationValues { get; set; } = new List<VariationValueModel>();
         public virtual ICollection<ImageGallaryModel> ImageGallaries { get; set; } = new List<ImageGallaryModel>();
+        public virtual ICollection<CartItemModel> CartItems { get; set; } = new List<CartItemModel>();
+        public virtual ICollection<OrderItemModel> OrderItems { get; set; } = new List<OrderItemModel>();
+        public virtual ICollection<InvoiceItemModel> InvoiceItems { get; set; } = new List<InvoiceItemModel>();
     }
+
 }

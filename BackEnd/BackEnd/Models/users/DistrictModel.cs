@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace BackEnd.Models.users
 {
     [Table("Districts")]
+    [Index(nameof(CityId),nameof(CreatedAt))]
+    [Index(nameof(Name), IsUnique = true)]
     public class DistrictModel
     {
         [Key]
@@ -12,6 +15,7 @@ namespace BackEnd.Models.users
 
         [Required]
         public string Name { get; set; }
+        public string? Code { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

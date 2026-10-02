@@ -1,5 +1,6 @@
 ﻿using BackEnd.Models.others;
 using BackEnd.Models.users;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -7,26 +8,31 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.shopping
 {
     [Table("Invoices")]
+    [Index(nameof(InvoiceCode), IsUnique = true)]
+    [Index(nameof(UserId), nameof(CreatedAt))]             
+
     public class InvoiceModel
     {
         [Key]
         public int Id { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
-        [Required]
-        public string InvoiceCode { get; set; }
+
         [Required]
         public string Email { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal? ShippingFee { get; set; }
-
+        public decimal? ShippingFee { get; set; } = 0;
+        [Required]
+        public string InvoiceCode { get; set; }
         public string? Note { get; set; }
         public bool IsPaid { get; set; } = false;
-        public string? AddressSnapshot { get; set; }
-        public string? MethodSnapshot { get; set; }
-        public string? FullFillmentType { get; set; }
-        public string OrderNumber { get; set; }
+        [Required]
+        public string AddressSnapshot { get; set; }
+        [Required]
+        public string MethodSnapshot { get; set; }
+        [Required]
+        public string FullFillmentType { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -52,12 +58,6 @@ namespace BackEnd.Models.shopping
         [ForeignKey(nameof(UserId))]
         [JsonIgnore]
         public virtual UserModel? User { get; set; }
-
-        //[Required]
-        //public int StatusId { get; set; }
-        //[ForeignKey(nameof(StatusId))]
-        //[JsonIgnore]
-        //public virtual StatusModel? Status { get; set; }
 
         [Required]
         public int PaymentMethodId { get; set; }

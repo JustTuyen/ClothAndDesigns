@@ -1,5 +1,6 @@
 ﻿using BackEnd.Models.productions;
 using BackEnd.Models.productions.attributes;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -7,6 +8,7 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.others
 {
     [Table("ImageGallary")]
+    [Index(nameof(ProductId), nameof(VariationId), nameof(DisplayOrder))]
     public class ImageGallaryModel
     {
         [Key]
@@ -18,7 +20,6 @@ namespace BackEnd.Models.others
         public bool IsThumbnail { get; set; } = false;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         //
         [Required]
         public int ProductId { get; set; }

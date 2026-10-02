@@ -1,6 +1,7 @@
 ﻿using BackEnd.Models.others;
 using BackEnd.Models.productions.attributes;
 using BackEnd.Models.productions.tags;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -8,6 +9,9 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.productions
 {
     [Table("Products")]
+    [Index(nameof(Slug), IsUnique = true)]
+    [Index(nameof(StatusId), nameof(SubCategoryId))]
+
     public class ProductModel
     {
         [Key]
@@ -18,7 +22,7 @@ namespace BackEnd.Models.productions
         public string Description { get; set; }
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal BasePrice { get; set; }
+        public decimal BasePrice { get; set; } = 0;
         [Required]
         public string Slug { get; set; }
 
@@ -39,7 +43,7 @@ namespace BackEnd.Models.productions
         public int SubCategoryId { get; set; }
         [ForeignKey(nameof(SubCategoryId))]
         [JsonIgnore]
-        public virtual SubCategoriesMdel? SubCategory { get; set; }
+        public virtual SubCategoriesModel? SubCategory { get; set; }
 
         public int? DiscountId { get; set; }
         [ForeignKey(nameof(DiscountId))]
@@ -49,6 +53,8 @@ namespace BackEnd.Models.productions
         public virtual ICollection<VariationModel> Variations { get; set; } = new List<VariationModel>();
         public virtual ICollection<ProductTagModel> ProductTags { get; set; } = new List<ProductTagModel>();
         public virtual ICollection<ImageGallaryModel> ImageGallaries { get; set; } = new List<ImageGallaryModel>();
-
+        public virtual ICollection<CommentModel> Comments { get; set; } = new List<CommentModel>();
+        public virtual ICollection<FavoriteModel> Favorites { get; set; } = new List<FavoriteModel>();
+      
     }
 }

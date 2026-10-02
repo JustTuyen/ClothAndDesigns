@@ -1,4 +1,5 @@
 ﻿using BackEnd.Models.others;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -6,6 +7,8 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.productions
 {
     [Table("Discounts")]
+    [Index(nameof(StatusId), nameof(CreatedAt))]
+    [Index(nameof(StatusId), nameof(StartDate), nameof(EndDate))]
     public class DiscountModel
     {
         [Key]

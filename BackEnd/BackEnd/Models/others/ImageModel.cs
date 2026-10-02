@@ -1,10 +1,12 @@
 ﻿using BackEnd.Models.productions;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Models.others
 {
     [Table("Images")]
+    [Index(nameof(PublicId), IsUnique = true)]
     public class ImageModel
     {
         [Key]
@@ -15,15 +17,14 @@ namespace BackEnd.Models.others
         [Required]
         public int Width { get; set; }
         [Required]
-        public int SizeBytes { get; set; }
+        public long SizeBytes { get; set; }
         [Required]
         public string Type { get; set; } = "image/png";
         [Required]
-        public string PublicId { get; set; }
+        public string PublicId { get; set; } = string.Empty;
         [Required]
-        public string URL { get; set; }
+        public string URL { get; set; } = string.Empty;
 
-        public bool IsThumbnail { get; set; } = false;
         public string? AltText { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -1,4 +1,5 @@
 ﻿using BackEnd.Models.users;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -6,6 +7,7 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.shopping
 {
     [Table("Carts")]
+    [Index(nameof(UserId), IsUnique = true)]
     public class CartModel
     {
         [Key]

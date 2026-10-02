@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace BackEnd.Models.productions.attributes
 {
     [Table("AttributeValues")]
+    [Index(nameof(AttributeId),nameof(Value), IsUnique = true)]
+
     public class AttributeValueModel
     {
         [Key]

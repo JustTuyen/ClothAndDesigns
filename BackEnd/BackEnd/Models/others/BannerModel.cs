@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace BackEnd.Models.others
 {
     [Table("Banners")]
+    [Index(nameof(StatusId), nameof(CreatedAt))]
     public class BannerModel
     {
         [Key]

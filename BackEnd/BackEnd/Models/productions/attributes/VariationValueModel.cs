@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.productions.attributes
 {
     [Table("VariationValues")]
-    [Index(nameof(VariationId), nameof(AttributeValueId), IsUnique = true)]
+    [Index(nameof(VariationId), nameof(AttributeId), IsUnique = true)]
     public class VariationValueModel
     {
         [Key]

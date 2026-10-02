@@ -1,5 +1,6 @@
 ﻿using BackEnd.Models.others;
 using BackEnd.Models.users;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -7,6 +8,9 @@ using System.Text.Json.Serialization;
 namespace BackEnd.Models.shopping
 {
     [Table("Orders")]
+    [Index(nameof(OrderCode), IsUnique = true)]
+    [Index(nameof(UserId), nameof(CreatedAt))]
+    [Index(nameof(StatusId), nameof(CreatedAt))]
     public class OrderModel
     {
         [Key]
@@ -18,15 +22,17 @@ namespace BackEnd.Models.shopping
         public string Email { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal? ShippingFee { get; set; }
+        public decimal? ShippingFee { get; set; } = 0;
         [Required]
-        public string InvoiceCode { get; set; }
+        public string OrderCode { get; set; }
         public string? Note { get; set; }
         public bool IsPaid { get; set; } = false;
-        public string? AddressSnapshot{ get; set; }
-        public string? MethodSnapshot { get; set; }
-        public string? FullFillmentType { get; set; }
-        public string OrderNumber { get; set; }
+        [Required]
+        public string AddressSnapshot{ get; set; }
+        [Required]
+        public string MethodSnapshot { get; set; }
+        [Required]
+        public string FullFillmentType { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -35,8 +41,7 @@ namespace BackEnd.Models.shopping
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         // Navigation properties
-        [Required]
-        public int AddressId { get; set; }
+        public int? AddressId { get; set; }
         [ForeignKey(nameof(AddressId))]
         [JsonIgnore]
         public virtual AddressModel? Address { get; set; }

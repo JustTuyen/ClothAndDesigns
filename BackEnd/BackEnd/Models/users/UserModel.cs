@@ -2,13 +2,20 @@
 using BackEnd.Models.productions;
 using BackEnd.Models.productions.tags;
 using BackEnd.Models.shopping;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace BackEnd.Models.users
 {
+    public enum UserRole { Customer, Admin, Staff }
+
+
     [Table("Users")]
+    [Index(nameof(Email), IsUnique = true)]
+    [Index(nameof(PhoneNumber), IsUnique = true)]
+    [Index(nameof(Role), nameof(StatusId))]
     public class UserModel
     {
         [Key]
@@ -31,7 +38,7 @@ namespace BackEnd.Models.users
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public string Role { get; set; }
+        public UserRole Role { get; set; }
 
         // Navigation property
         public virtual CartModel? Cart { get; set; }
@@ -46,5 +53,6 @@ namespace BackEnd.Models.users
         public virtual ICollection<FavoriteModel> Favorites { get; set; } = new List<FavoriteModel>();
         public virtual ICollection<AddressModel> Addresses { get; set; } = new List<AddressModel>();
         public virtual ICollection<OrderModel> Orders { get; set; } = new List<OrderModel>();
+        public virtual ICollection<InvoiceModel> Invoices { get; set; } = new List<InvoiceModel>();
     }
 }
