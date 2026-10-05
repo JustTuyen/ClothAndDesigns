@@ -20,7 +20,6 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.Al
 var connectionString = builder.Configuration.GetConnectionString("cnn");
 builder.Services.AddDbContext<MyApplicationDBContext>(options =>
     options.UseNpgsql(connectionString)
-    .LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging()
 );
 
 //S3
