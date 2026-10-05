@@ -11,7 +11,7 @@
         public string Key { get; set; } = string.Empty;
         public int Width { get; set; }
         public int Height { get; set; }
-
+        //public string AltText { get; set; }
         public long SizeBytes { get; set; }
         public string ContentType { get; set; } = string.Empty;
     }

@@ -58,7 +58,7 @@ namespace BackEnd.Service.media
                 Height = height,
                 Width = width,
                 SizeBytes = sizeByte,
-                ContentType = file.ContentType
+                ContentType = file.ContentType,
             };
         }
 
