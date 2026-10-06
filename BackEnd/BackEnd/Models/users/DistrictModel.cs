@@ -20,11 +20,11 @@ namespace BackEnd.Models.users
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         //address navigation property
-        [Required]
-        public int AddressId { get; set; }
-        [ForeignKey(nameof(AddressId))]
-        [JsonIgnore]
-        public virtual AddressModel? Address { get; set; }
+        //[Required]
+        //public int AddressId { get; set; }
+        //[ForeignKey(nameof(AddressId))]
+        //[JsonIgnore]
+        //public virtual AddressModel? Address { get; set; }
 
         [Required]
         public int CityId { get; set; }
