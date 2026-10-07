@@ -28,6 +28,7 @@ public class CategoryModelsController : Controller
         var cats = await _context.Categories
             .Include(x => x.Image)
             .Include(x => x.Status)
+            .Include(x => x.SubCategories)
             .ToListAsync();
 
         if (cats.Count == 0) return NotFound("ko tim thay cats nao :/");
@@ -41,7 +42,13 @@ public class CategoryModelsController : Controller
             UpdatedAt = cat.UpdatedAt,
             URL = cat.Image.URL,
             AltText = cat.Image.AltText,
-            StatusName = cat.Status.Name
+            StatusName = cat.Status.Name,
+            SubCategories = cat.SubCategories
+                .Select(x => new SubCatListing
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList()
         }).ToList();
 
         return Ok(dto);
@@ -167,6 +174,8 @@ public class CategoryModelsController : Controller
         var cats = await _context.Categories.Where(x => x.Status.Name == "active")
             .Include(x => x.Image)
             .Include(x => x.Status)
+            .Include(x => x.SubCategories)
+                .ThenInclude(x => x.Status)
             .ToListAsync();
 
         var dto = cats.Select(cat => new ListingCat
@@ -174,7 +183,14 @@ public class CategoryModelsController : Controller
             Id = cat.Id,
             Name = cat.Name,
             URL = cat.Image?.URL,
-            AltText = cat.Image?.AltText
+            AltText = cat.Image?.AltText,
+            SubCategories = cat.SubCategories
+                .Where(x => x.Status?.Name == "active")
+                .Select(x => new SubCatListing
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList()
         }).ToList();
 
         return Ok(dto);

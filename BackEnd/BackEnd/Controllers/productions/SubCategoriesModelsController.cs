@@ -96,7 +96,7 @@ public class SubCategoriesModelsController : Controller
         _context.SubCategories.Add(sub);
         await _context.SaveChangesAsync();
 
-        var resutldto = new SubCatResultDTO
+        var resutldto = new SubCatResult
         {
             Id = sub.Id,
             Slug = sub.Slug,
@@ -145,6 +145,58 @@ public class SubCategoriesModelsController : Controller
 
     //puts
     [HttpPut("/subcatogory/category/{id}")]
+    public async Task<ActionResult<UpdateCategory>> UpdateCategory(int id, [FromForm] UpdateCategory dto)
+    {
+        if (dto == null) return BadRequest("Dto or request data is missing");
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var sub = await _context.SubCategories
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (sub == null) return NotFound("KO co subcat nao co id nay");
+
+        var cat = await _context.Categories.FirstOrDefaultAsync(x => x.Id == dto.categoryId);
+        if (cat == null) return NotFound("KO co cat nao co id nay");
+
+        sub.CategoryId = dto.categoryId;
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
     [HttpPut("/subcatogory/status/{id}")]
+    public async Task<ActionResult<UpdateStaSud>> UpdateStatus(int id, [FromForm] UpdateStaSud dto)
+    {
+        if (dto == null) return BadRequest("Dto or request data is missing");
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var sub = await _context.SubCategories
+            .FirstOrDefaultAsync(x => x.Id == id);
+        if (sub == null) return NotFound("KO co subcat nao co id nay");
+
+        var sta = await _context.Statuses.Where(x => x.Type == "subcategory")
+            .FirstOrDefaultAsync(x => x.Id == dto.StatusId);
+        if (sta == null) return NotFound("KO co cat nao co id nay");
+
+        sub.CategoryId = dto.StatusId;
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
     [HttpGet("listing")]
+    public async Task<ActionResult<List<SubCatListing>>> Listing()
+    {
+        var subs = await _context.SubCategories
+            .OrderBy(x => x.CreatedAt)
+            .Where(x => x.Status.Name == "active")
+            .ToListAsync();
+        if (subs.Count == 0) return NotFound("ko co subcat nao dang hoat dong");
+
+        var dto = subs.Select(sub => new SubCatListing
+        {
+            Id = sub.Id,
+            Name = sub.Name
+        }).ToList();
+
+        return Ok(dto);
+    }
 }
