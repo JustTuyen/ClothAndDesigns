@@ -10,6 +10,7 @@
         public string URL { get; set; }
         public string AltText { get; set; }
         public string StatusName { get; set; }
+        public List<SubCatListing> SubCategories { get; set; } = new();
     }
 
     public class ListingCat
@@ -18,6 +19,7 @@
         public string Name { get; set; }
         public string URL { get; set; }
         public string AltText { get; set; }
+        public List<SubCatListing> SubCategories { get; set; } = new();
     }
     public class CreateCategory
     {
@@ -25,6 +27,7 @@
         public string Description { get; set; }
         public IFormFile Image { get; set; }
         public string AltText { get; set; }
+
     }
 
     public class UpdateCat

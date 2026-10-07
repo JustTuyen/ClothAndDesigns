@@ -32,7 +32,7 @@
         public string Slug { get; set; }
     }
 
-    public class UpdateSta
+    public class UpdateStaSud
     {
         public int StatusId { get; set; }
     }
@@ -42,7 +42,7 @@
         public int categoryId { get; set; }
     }
 
-    public class SubCatResultDTO
+    public class SubCatResult
     {
         public int Id { get; set; }
         public string Slug { get; set; }
