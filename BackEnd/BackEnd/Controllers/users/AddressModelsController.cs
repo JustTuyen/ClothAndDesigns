@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackEnd.Models.users;
 using BackEnd.Data;
+using BackEnd.DTO.user;
 
 public class AddressModelsController : Controller
 {
@@ -14,137 +15,216 @@ public class AddressModelsController : Controller
     }
 
     // GET: ADDRESSMODELS
-    public async Task<IActionResult> Index()    
+    [HttpGet]
+    public async Task<ActionResult<List<Address>>> GetAll()
     {
-        return View(await _context.Addresses.ToListAsync());
-    }
+        var adds = await _context.Addresses
+            .OrderBy(x => x.CreatedAt)
+            .Include(x => x.User)
+            .Include(x => x.City)
+            .Include(x => x.District)
+            .Include(x => x.Ward)
+            .Include(x => x.Status)
+            .ToListAsync();
 
-    // GET: ADDRESSMODELS/Details/5
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null)
+        if (adds.Count == 0) return Ok(new { message = "No add is found" });
+
+        var dto = adds.Select(x => new Address
         {
-            return NotFound();
-        }
+            Id = x.Id,
+            Street = x.Street,
+            Note = x.Note,
+            IsDefault = x.IsDefault,
+            CreatedAt = x.CreatedAt,
+            UpdatedAt = x.UpdatedAt,
+            StatusName = x.Status.Name,
+            CityName = x.City.Name,
+            DistrictName = x.District.Name,
+            WardName = x.Ward.Name,
+            FullName = $"{x.User.FirstName ?? ""} {x.User.LastName ?? ""}".Trim()
+        }).ToList();
 
-        var addressmodel = await _context.Addresses
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (addressmodel == null)
-        {
-            return NotFound();
-        }
-
-        return View(addressmodel);
+        return Ok(dto);
     }
 
-    // GET: ADDRESSMODELS/Create
-    public IActionResult Create()
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Address>> GetById(int id)
     {
-        return View();
+        var x = await _context.Addresses
+            .OrderBy(x => x.CreatedAt)
+            .Include(x => x.User)
+            .Include(x => x.City)
+            .Include(x => x.District)
+            .Include(x => x.Ward)
+            .Include(x => x.Status)
+            .FirstOrDefaultAsync(x => x.Id == id);
+        if (x == null) return BadRequest("No address with this id");
+
+        var dto = new Address
+        {
+            Id = x.Id,
+            Street = x.Street,
+            Note = x.Note,
+            IsDefault = x.IsDefault,
+            CreatedAt = x.CreatedAt,
+            UpdatedAt = x.UpdatedAt,
+            StatusName = x.Status.Name,
+            CityName = x.City.Name,
+            DistrictName = x.District.Name,
+            WardName = x.Ward.Name,
+            FullName = $"{x.User.FirstName ?? ""} {x.User.LastName ?? ""}".Trim()
+        };
+
+        return Ok(dto);
     }
 
-    // POST: ADDRESSMODELS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Street,Note,IsDefault,CreatedAt,UpdatedAt,StatusId,Status,UserId,User,CityId,City,DistrictId,District,WardId,Ward")] AddressModel addressmodel)
+    public async Task<ActionResult<CreateAddress>> Create([FromForm] CreateAddress dto)
     {
-        if (ModelState.IsValid)
+        if (dto == null) return BadRequest("Dto is null or missing");
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var sta = await _context.Statuses
+            .Where(x => x.Type == "address" && x.Name == "active")
+            .FirstOrDefaultAsync();
+        if (sta == null) return BadRequest("no status for address");
+
+        var city = await _context.Cities
+            .FirstOrDefaultAsync(x => x.Id == dto.CityId);
+        if (city == null) return BadRequest("Không tìm thấy city với id này.");
+
+        var dis = await _context.Districts
+            .FirstOrDefaultAsync(x => x.Id == dto.DistrictId && x.CityId == dto.CityId);
+        if (dis == null) return BadRequest("Không tìm thấy district khớp với city đã chọn.");
+
+        var ward = await _context.Wards
+            .FirstOrDefaultAsync(x => x.Id == dto.WardId && x.DistrictId == dto.DistrictId);
+        if (dis == null) return BadRequest("Không tìm thấy ward khớp với district đã chọn.");
+
+        var user = await _context.Users
+            .FirstOrDefaultAsync(x => x.Id == dto.UserId && x.Status.Name == "active");
+        if (user == null) return BadRequest("Không tìm thấy user khớp với id đã chọn or dang hoat dong.");
+
+        var address = new AddressModel
         {
-            _context.Add(addressmodel);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        return View(addressmodel);
+            UserId = user.Id,
+            StatusId = sta.Id,
+            CityId = city.Id,
+            DistrictId = dis.Id,
+            WardId = ward.Id,
+            Street = dto.Street,
+            IsDefault = dto.IsDefault,
+            Note = dto.Note
+        };
+
+        _context.Addresses.Add(address);
+        await _context.SaveChangesAsync();
+
+        var result = new AddressResult
+        {
+            Id = address.Id
+        };
+
+        return CreatedAtAction(nameof(GetById), new { id = address.Id }, result);
     }
 
-    // GET: ADDRESSMODELS/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    [HttpDelete("id")]
+    public async Task<ActionResult<Address>> Delete(int id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        var x = await _context.Addresses.FirstOrDefaultAsync(x => x.Id == id);
+        if (x == null) return BadRequest("No address with this id");
 
-        var addressmodel = await _context.Addresses.FindAsync(id);
-        if (addressmodel == null)
-        {
-            return NotFound();
-        }
-        return View(addressmodel);
+        _context.Addresses.Remove(x);
+        await _context.SaveChangesAsync();
+        return NoContent();
     }
 
-    // POST: ADDRESSMODELS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Street,Note,IsDefault,CreatedAt,UpdatedAt,StatusId,Status,UserId,User,CityId,City,DistrictId,District,WardId,Ward")] AddressModel addressmodel)
+    [HttpPut("{id}")]
+    public async Task<ActionResult<UpdateAddress>> Update(int id, [FromForm] UpdateAddress dto)
     {
-        if (id != addressmodel.Id)
-        {
-            return NotFound();
-        }
+        if (dto == null) return BadRequest("Dto is null or missing");
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
+        var address = await _context.Addresses.FirstOrDefaultAsync(x => x.Id == id);
+        if (address == null) return BadRequest("No address with this id");
 
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                _context.Update(addressmodel);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AddressModelExists(addressmodel.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        return View(addressmodel);
-    }
+        var city = await _context.Cities
+            .FirstOrDefaultAsync(x => x.Id == dto.CityId);
+        if (city == null) return BadRequest("Không tìm thấy city với id này.");
 
-    // GET: ADDRESSMODELS/Delete/5
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        var dis = await _context.Districts
+            .FirstOrDefaultAsync(x => x.Id == dto.DistrictId && x.CityId == dto.CityId);
+        if (dis == null) return BadRequest("Không tìm thấy district khớp với city đã chọn.");
 
-        var addressmodel = await _context.Addresses
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (addressmodel == null)
-        {
-            return NotFound();
-        }
+        var ward = await _context.Wards
+            .FirstOrDefaultAsync(x => x.Id == dto.WardId && x.DistrictId == dto.DistrictId);
+        if (dis == null) return BadRequest("Không tìm thấy ward khớp với district đã chọn.");
 
-        return View(addressmodel);
-    }
-
-    // POST: ADDRESSMODELS/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? id)
-    {
-        var addressmodel = await _context.Addresses.FindAsync(id);
-        if (addressmodel != null)
+        if (dto.IsDefault)
         {
-            _context.Addresses.Remove(addressmodel);
+            await _context.Addresses
+                .Where(x => x.UserId == address.UserId && x.Id != id)
+                .ExecuteUpdateAsync(setters => setters
+                .SetProperty(a => a.IsDefault, false)
+                .SetProperty(a => a.UpdatedAt, DateTime.UtcNow));
         }
+        address.IsDefault = dto.IsDefault;
+        address.Street = dto.Street;
+        address.Note = dto.Note;
+        address.CityId = city.Id;
+        address.DistrictId = dis.Id;
+        address.WardId = ward.Id;
+        address.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        return NoContent();
+    }
+    //
+    [HttpPut("/address/status/{id}")]
+    public async Task<ActionResult<AddressStatus>> UpdateStatus(int id, [FromForm] AddressStatus dto)
+    {
+        if (dto == null) return BadRequest("Dto is null or missing");
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var address = await _context.Addresses.FirstOrDefaultAsync(x => x.Id == id);
+        if (address == null) return BadRequest("No address with this id");
+
+        var sta = await _context.Statuses
+            .Where(x => x.Type == "address")
+            .FirstOrDefaultAsync();
+        if (sta == null) return BadRequest("no status for address");
+
+        address.StatusId = sta.Id;
+        address.UpdatedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+        return NoContent();
     }
 
-    private bool AddressModelExists(int? id)
+    [HttpGet("listing")]
+    public async Task<ActionResult<List<AddressListing>>> Listing()
     {
-        return _context.Addresses.Any(e => e.Id == id);
+        var adds = await _context.Addresses
+           .OrderBy(x => x.CreatedAt)
+           .Include(x => x.User)
+           .Include(x => x.City)
+           .Include(x => x.District)
+           .Include(x => x.Ward)
+           .ToListAsync();
+
+        if (adds.Count == 0) return Ok(new { message = "No add is found" });
+
+        var dto = adds.Select(add => new AddressListing
+        {
+            Id = add.Id,
+            Street = add.Street,
+            IsDefault = add.IsDefault,
+            CityName = add.City.Name,
+            DistrictName = add.District.Name,
+            wardName = add.Ward.Name,
+            FullName = $"{add.User.FirstName ?? ""} {add.User.LastName ?? ""}".Trim()
+        }).ToList();
+
+        return Ok(dto);
     }
+
 }
