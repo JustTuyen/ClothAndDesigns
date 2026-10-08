@@ -12,6 +12,8 @@ namespace BackEnd.Data
     {
         public MyApplicationDBContext(DbContextOptions<MyApplicationDBContext> options) : base(options) { }
         #region
+        //discount
+        public DbSet<DiscountModel> Discounts { get; set; }
         //users
         public DbSet<UserModel> Users { get; set; }
         //address
