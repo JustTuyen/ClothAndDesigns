@@ -14,10 +14,10 @@ namespace BackEnd.DTO.product
         public DateTime UpdatedAt { get; set; }
         public int ViewCount { get; set; }
         public int LikeCount { get; set; }
-        public string? DiscountName { get; set; }
+        public decimal? DiscountPercentage { get; set; }
         public string? StatusName { get; set; }
         public string? SubCatName { get; set; }
-        public List<ListingTag> Tags { get; set; } = new();
+        //public List<ListingTag> Tags { get; set; } = new();
         public List<ImageGallaryListing> ImageGallaries { get; set; } = new();
     }
 
@@ -28,10 +28,10 @@ namespace BackEnd.DTO.product
         public decimal BasePrice { get; set; } = 0;
         public string Slug { get; set; }
         public int? DiscountId { get; set; }
-        public int StatusId { get; set; }
         public int SubCategoryId { get; set; }
         public List<int> TagIds { get; set; } = new();
-        public IFormFile Image { get; set; }
+        public List<IFormFile> Images { get; set; } = new();
+        public string AltText { get; set; }
     }
 
     public class ListingProduct
@@ -40,6 +40,7 @@ namespace BackEnd.DTO.product
         public string Name { get; set; } 
         public decimal BasePrice { get; set; } = 0;
         public string ImageURL { get; set; }
+        public decimal? DiscountPercentage { get; set; }
 
     }
 
@@ -55,11 +56,17 @@ namespace BackEnd.DTO.product
 
     public class ProductDiscount
     {
-        public int Discount { get; set; }
+        public int DiscountId { get; set; }
     }
     public class ProductStatus
     {
         public int StatusId { get; set; }
+    }
+
+    public class ProductImages
+    {
+        public List<IFormFile> Images { get; set; } = new();
+        public string AltText { get; set; }
     }
 
     public class ProductFilter
@@ -73,11 +80,18 @@ namespace BackEnd.DTO.product
         public bool? HasDiscount { get; set; }
         public int? MinViewCount { get; set; }
 
+        public string? Keyword { get; set; }
         // "CreatedAt" , "ViewCount" , "Price"
         public string? SortBy { get; set; } = "CreatedAt";
         public bool SortDescending { get; set; } = true;
-
+        //
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 20;
+    }
+
+    public class ResultProduct
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

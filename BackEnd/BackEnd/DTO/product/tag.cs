@@ -26,4 +26,10 @@ namespace BackEnd.DTO.produc
         public string Name { get; set; }
     }
 
+    public class ListingProductTag
+    {
+        public int Id { get; set; }
+        public string TagName { get; set; }
+    }
+
 }
