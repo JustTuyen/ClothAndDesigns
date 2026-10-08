@@ -1,4 +1,5 @@
 
+
 using BackEnd.Data;
 using BackEnd.DTO.other;
 using BackEnd.Models.others;
@@ -25,7 +26,7 @@ public class StatusModelsController : ControllerBase
             .OrderBy(p => p.Type)
             .ToListAsync();
 
-        if (stas.Count == 0) return NotFound($"Không tìm thấy status");
+        if (stas.Count == 0) return Ok($"Không tìm thấy status");
         
         var dto = stas.Select(sa => new Status
         {

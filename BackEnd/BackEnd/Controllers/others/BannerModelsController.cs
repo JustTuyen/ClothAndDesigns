@@ -10,7 +10,7 @@ using System.Reflection;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BannerModelsController : Controller
+public class BannerModelsController : ControllerBase
 {
     private readonly MyApplicationDBContext _context;
     private readonly IImageUploadService _imageUploadService;
