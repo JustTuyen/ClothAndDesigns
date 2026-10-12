@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using BackEnd.Models.users;
 using BackEnd.Data;
 using BackEnd.DTO.user;
-
-public class AddressModelsController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class AddressModelsController : ControllerBase
 {
     private readonly MyApplicationDBContext _context;
 
@@ -227,4 +228,31 @@ public class AddressModelsController : Controller
         return Ok(dto);
     }
 
+    [HttpGet("/address/user/{id}")]
+    public async Task<ActionResult<List<AddressListing>>> GetByUserId(int id)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        if (user == null) return BadRequest("no user is found with this id");
+
+        var adds = await _context.Addresses
+            .Include(x => x.City)
+            .Include(x => x.District)
+            .Include(x => x.Ward)
+            .Where(x => x.UserId == id && x.Status.Name == "active")
+            .ToListAsync();
+
+        if (adds.Count == 0) return Ok(new { message = "no address or active address" });
+        var dto = adds.Select(add => new AddressListing
+        {
+            Id = add.Id,
+            Street = add.Street,
+            Note = add.Note,
+            IsDefault = add.IsDefault,
+            CityName = add.City.Name,
+            DistrictName = add.District.Name,
+            wardName = add.Ward.Name,
+        }).ToList();
+
+        return Ok(dto);
+    }
 }

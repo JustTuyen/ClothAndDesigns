@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 [ApiController]
 [Route("api/[controller]")]
-public class WardModelsController : Controller
+public class WardModelsController : ControllerBase
 {
     private readonly MyApplicationDBContext _context;
 
