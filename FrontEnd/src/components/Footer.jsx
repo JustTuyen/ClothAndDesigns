@@ -18,7 +18,7 @@ import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 function Footer(){
     return(
         <>
-        <footer className="p-4 bg-[#20716A]">
+        <footer className="p-4 bg-[#00B7CD]">
             <div className="p-2 flex flex-col items-center gap-2 text-white">
                 <p className="text-xl">ĐĂNG KÝ NHẬN TIN</p>
                 <p className="text-sm">Để cập nhật những sản phẩm mới, nhận thông tin ưu đãi đặc biệt và thông tin giảm giá khác.</p>
@@ -27,7 +27,7 @@ function Footer(){
                     placeholder="Enter Ur Email"/>
                     <Button variant="contained" 
                     sx={{padding: '12px', 
-                        backgroundColor: '#FFC0C2',
+                        backgroundColor: '#FF9100',
                         borderRadius: '4px'}}
                     endIcon={<SendIcon />}>
                         Send

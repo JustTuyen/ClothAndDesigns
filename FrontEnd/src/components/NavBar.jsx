@@ -93,7 +93,7 @@ function NavBar(){
 
     return (
         <>
-        <nav className="top-0 p-2 bg-[#23A393]">
+        <nav className="top-0 p-2 bg-[#00B7CD]">
             <div className="flex justify-between items-center">
                 <div className="p-2 block lg:hidden">
                     <IconButton aria-label="drawer" onClick={toggleDrawer(true)}>
@@ -105,6 +105,7 @@ function NavBar(){
                 </div>
                 <div className="p-2">
                     <img src={ImgIcon} alt="wed-logo" />
+                    
                 </div>
                 <div className="p-2">
                     <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
@@ -152,7 +153,7 @@ function NavBar(){
 
             </div>
             {/* categories and subcats */}
-            <div className="hidden lg:flex justify-center">
+            {/* <div className="hidden lg:flex justify-center">
                 <div className="items-center gap-2 flex-wrap">
                     <Button
                         sx={{
@@ -165,7 +166,7 @@ function NavBar(){
                         Category
                     </Button>   
                 </div>   
-            </div>
+            </div> */}
         </nav>
         </>
     )

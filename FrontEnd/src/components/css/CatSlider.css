@@ -1,0 +1,33 @@
+.cat-items {
+    height: 150px;
+    width: 150px;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+@media(max-width: 1024px) {
+    .cat-items {
+        height: 100px;
+        width: 100px;
+    }
+    .check-items{
+        height: 100px;
+        width: 100px;
+    }
+}
+
+@media(max-width: 1024px) {
+    .cat-items {
+        height: 100px;
+        width: 100px;
+    }
+    .check-items{
+        height: 100px;
+        width: 100px;
+    }
+}
