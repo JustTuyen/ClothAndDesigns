@@ -9,6 +9,12 @@
   }
 }
 
+@media (max-width: 800px) {
+  .tab{
+    font-size: 16px;
+  }
+}
+
 /* #DF301C */
 .hover-line1 {
   position: relative;
@@ -152,4 +158,48 @@
 
 #check-all:hover::after {
   transform: scale(1);
+}
+
+
+/*FOR DETAILS TABS*/
+.tab-title{
+  font-size: 24px;
+  position: relative;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+} 
+
+.tab-title::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0); /* Hide the line by shrinking it to 0 width */
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-out; /* Smooth transition instead of keyframes */
+}
+
+/* Reveal the line on hover */
+.tab-title:hover::after {
+  transform: scaleX(1); /* Stretch the line to full width */
+  transform-origin: bottom left;
+}
+
+.tab01::after{
+  background-color: #00B7CD;
+}
+
+.tab02::after{
+  background-color: #FF9100;
+}
+
+.tab03::after{
+  background-color: #DF301C;
+}
+
+.tab04::after{
+  background-color: #FFF1D1;
 }
