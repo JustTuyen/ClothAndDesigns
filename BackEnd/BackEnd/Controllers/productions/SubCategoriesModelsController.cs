@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 [ApiController]
 [Route("api/[controller]")]
-public class SubCategoriesModelsController : Controller
+public class SubCategoriesModelsController : ControllerBase
 {
     private readonly MyApplicationDBContext _context;
 

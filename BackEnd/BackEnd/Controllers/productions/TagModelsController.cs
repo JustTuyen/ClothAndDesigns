@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TagModelsController : Controller
+public class TagModelsController : ControllerBase
 {
     private readonly MyApplicationDBContext _context;
 

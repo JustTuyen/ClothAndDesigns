@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 [ApiController]
 [Route("api/[controller]")]
-public class CategoryModelsController : Controller
+public class CategoryModelsController : ControllerBase
 {
     private readonly MyApplicationDBContext _context;
     private readonly IImageUploadService _imageUploadService;
