@@ -236,8 +236,8 @@ public class CategoryModelsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("/category/statuc/{id}")]
-    public async Task<ActionResult<CatUpdateStatus>> UpdateStatus(int id, [FromForm] CatUpdateStatus dto)
+    [HttpPut("/category/status/{id}")]
+    public async Task<ActionResult<CatUpdateStatus>> UpdateStatus(int id, [FromQuery] CatUpdateStatus dto)
     {
         if (dto == null) return BadRequest("Dto or request data is missing");
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -246,7 +246,7 @@ public class CategoryModelsController : ControllerBase
             .FirstOrDefaultAsync(x => x.Id == id);
         if (cat == null) return NotFound($"Không tìm thấy category");
 
-        var sta = await _context.Statuses.Where(x => x.Type == "category").FirstOrDefaultAsync(x => x.Id == id);
+        var sta = await _context.Statuses.Where(x => x.Type == "category").FirstOrDefaultAsync(x => x.Id == dto.StatusId);
         if (sta == null) return BadRequest("Status ko danh cho category");
 
         cat.StatusId = dto.StatusId;
