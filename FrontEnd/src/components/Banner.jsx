@@ -22,10 +22,6 @@ function Banner(){
         autoplay: true,
         autoplaySpeed: 2000,
         pauseOnHover: true,
-        // responsive: [
-        //     { breakpoint: 1024, settings: { Height: 2 } },
-        //     { breakpoint: 640, settings: { slidesToShow: 1 } },
-        // ],
     };
 
     return (
